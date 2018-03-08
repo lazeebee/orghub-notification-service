@@ -1,5 +1,8 @@
 import RateLimit from 'express-rate-limit';
 import path from 'path';
+import env from 'dotenv';
+
+env.load();
 
 export default {
   port: process.env.PORT || 5000,

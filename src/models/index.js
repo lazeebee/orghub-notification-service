@@ -1,3 +1,1 @@
-import placeholder from './placeholder';
-
-export { placeholder };
+export default {};

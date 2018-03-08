@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-export default function ({ config, db }) {
+export default function (config) {
   const api = Router();
 
   // API routes

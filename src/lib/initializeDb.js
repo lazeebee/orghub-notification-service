@@ -1,18 +1,10 @@
-export default function ({ dbAddress }, cb) {
-  /*
-    MONGO
-      mongoose.Promise = global.Promise;
-      mongoose.connect(dbAddress);
-      mongoose.connection.on('error', error => console.log(error));
-      mongoose.connection.once('open', () => console.log('Connected to database ' + dbAddress));
-      cb();
+import mongoose from 'mongoose';
 
-    REDIS
-      const db = redis.createClient();
-      db.on('error', error => console.log(error));
-      db.on('connect', () => console.log('Connected to database ' + dbAddress))
-      cb(db);
-    */
+export default function ({ dbAddress }, cb) {
+  mongoose.Promise = global.Promise;
+  mongoose.connect(dbAddress);
+  mongoose.connection.on('error', error => console.log(error));
+  mongoose.connection.once('open', () => console.log(`connected to database at ${dbAddress}`));
 
   return cb();
 }

@@ -20,9 +20,9 @@ app.use(cors(config.cors));
 app.use(config.rateLimit);
 app.use(logger(config));
 
-initializeDb(config, (db) => {
-  app.use(config.prefix, middleware({ config, db }));
-  app.use(config.prefix, api({ config, db }));
+initializeDb(config, () => {
+  app.use(config.prefix, middleware(config));
+  app.use(config.prefix, api(config));
   app.use(errorHandler);
   app.listen(config.port, () => console.log(`server running at port ${config.port}`));
 });
