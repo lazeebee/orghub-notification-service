@@ -25,14 +25,6 @@ async function countTrackers(organization) {
   return this.count({ organization });
 }
 
-async function createOrUpdate(data) {
-  this.update({
-    username: data.username,
-    organization: data.organization,
-  }, data, { upsert: true, setDefaultsOnInsert: true });
-  return this.countTrackers(data.organization);
-}
-
 async function removeByUsernameAndOrganization(username, organization) {
   this.remove({ username, organization });
   return this.countTrackers(organization);
@@ -47,7 +39,6 @@ async function removeByUsername(username) {
 eventTrackerSchema.statics.getByUsernameAndOrganization = getByUsernameAndOrganization;
 eventTrackerSchema.statics.getTrackers = getTrackers;
 eventTrackerSchema.statics.countTrackers = countTrackers;
-eventTrackerSchema.statics.createOrUpdate = createOrUpdate;
 eventTrackerSchema.statics.removeByUsernameAndOrganization = removeByUsernameAndOrganization;
 eventTrackerSchema.statics.removeByUsername = removeByUsername;
 const EventTracker = mongoose.model('EventTracker', eventTrackerSchema);

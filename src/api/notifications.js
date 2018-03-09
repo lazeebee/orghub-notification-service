@@ -9,7 +9,7 @@ export default function (config) {
   router.get('/:organization', async (req, res) => {
     const token = req.get('Authorization');
     const { organization } = req.params;
-    const username = getUsernameByToken(token);
+    const username = await getUsernameByToken(token);
     const tracker = await EventTracker.getByUsernameAndOrganization(username, organization);
     if (tracker) {
       res.json(tracker);
@@ -22,9 +22,11 @@ export default function (config) {
     try {
       const token = req.get('Authorization');
       const { organization } = req.params;
-      const username = getUsernameByToken(token);
-      const trackers = await EventTracker.createOrUpdate({ username, organization });
-      if (!trackers) {
+      const username = await getUsernameByToken(token);
+      const count = await EventTracker.countTrackers(organization);
+      const tracker = new EventTracker({ username, organization });
+      await tracker.save();
+      if (!count) {
         await createHook(organization, token, config);
       }
       res.sendStatus(201);
@@ -36,9 +38,10 @@ export default function (config) {
   router.put('/:organization', async (req, res, next) => {
     try {
       const token = req.get('Authorization');
-      const username = getUsernameByToken(token);
-      const data = Object.assign({ username }, req.params, req.body);
-      await EventTracker.createOrUpdate(data);
+      const username = await getUsernameByToken(token);
+      const { organization } = req.params;
+      const { pushToken, phoneNumber, events } = req.body;
+      await EventTracker.update({ username, organization }, { pushToken, phoneNumber, events });
       res.sendStatus(204);
     } catch (err) {
       next(err);
@@ -48,7 +51,7 @@ export default function (config) {
   router.delete('/:organization', async (req, res, next) => {
     try {
       const token = req.get('Authorization');
-      const username = getUsernameByToken(token);
+      const username = await getUsernameByToken(token);
       const { organization } = req.params;
       const trackers = await EventTracker.removeByUsernameAndOrganization(username, organization);
       if (!trackers) {
