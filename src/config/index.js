@@ -16,4 +16,7 @@ export default {
     max: 100,
     delayMs: 0,
   }),
+  eventTypes: ['issue_comment', 'issues', 'pull_request', 'pull_request_review',
+    'pull_request_review_comment', 'push'],
+  payloadUrl: process.env.PAYLOAD_URL,
 };

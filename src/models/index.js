@@ -1,1 +1,3 @@
-export default {};
+import EventTracker from './EventTracker';
+
+export default { EventTracker };
