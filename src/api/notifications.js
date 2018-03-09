@@ -1,12 +1,15 @@
 import { Router } from 'express';
 import EventTracker from '../models/EventTracker';
 import { createHook, removeHook } from '../lib/webhook';
+import getUsernameByToken from '../lib/getUsernameByToken';
 
 export default function (config) {
   const router = Router();
 
-  router.get('/:username/:organization', async (req, res) => {
-    const { username, organization } = req.params;
+  router.get('/:organization', async (req, res) => {
+    const token = req.get('Authorization');
+    const { organization } = req.params;
+    const username = getUsernameByToken(token);
     const tracker = await EventTracker.getByUsernameAndOrganization(username, organization);
     if (tracker) {
       res.json(tracker);
@@ -15,10 +18,11 @@ export default function (config) {
     }
   });
 
-  router.post('/:username/:organization', async (req, res, next) => {
+  router.post('/:organization', async (req, res, next) => {
     try {
       const token = req.get('Authorization');
-      const { username, organization } = req.params;
+      const { organization } = req.params;
+      const username = getUsernameByToken(token);
       const trackers = await EventTracker.createOrUpdate({ username, organization });
       if (!trackers) {
         await createHook(organization, token, config);
@@ -29,9 +33,11 @@ export default function (config) {
     }
   });
 
-  router.put('/:username/:organization', async (req, res, next) => {
+  router.put('/:organization', async (req, res, next) => {
     try {
-      const data = Object.assign({}, req.params, req.body);
+      const token = req.get('Authorization');
+      const username = getUsernameByToken(token);
+      const data = Object.assign({ username }, req.params, req.body);
       await EventTracker.createOrUpdate(data);
       res.sendStatus(204);
     } catch (err) {
@@ -39,22 +45,11 @@ export default function (config) {
     }
   });
 
-  router.delete('/:username', async (req, res, next) => {
+  router.delete('/:organization', async (req, res, next) => {
     try {
       const token = req.get('Authorization');
-      const { username } = req.params;
-      const trackers = await EventTracker.removeByUsername(username);
-      trackers.forEach(async tracker => removeHook(tracker.organization, token, config));
-      res.sendStatus(204);
-    } catch (err) {
-      next(err);
-    }
-  });
-
-  router.delete('/:username/:organization', async (req, res, next) => {
-    try {
-      const token = req.get('Authorization');
-      const { username, organization } = req.params;
+      const username = getUsernameByToken(token);
+      const { organization } = req.params;
       const trackers = await EventTracker.removeByUsernameAndOrganization(username, organization);
       if (!trackers) {
         await removeHook(organization, token, config);
