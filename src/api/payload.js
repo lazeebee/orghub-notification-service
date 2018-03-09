@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import EventTracker from '../models/EventTracker';
+import { processPayload } from '../lib/processPayload';
 
 export default function (config) {
   const router = Router();
@@ -11,7 +12,7 @@ export default function (config) {
 
       if (!zen) {
         const trackers = await EventTracker.getTrackers(org.id, type);
-        trackers.forEach(tracker => console.log(tracker));
+        await processPayload(req.body, type, trackers, config);
       }
       res.sendStatus(202);
     } catch (err) {

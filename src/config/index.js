@@ -19,4 +19,7 @@ export default {
   eventTypes: ['issue_comment', 'issues', 'pull_request', 'pull_request_review',
     'pull_request_review_comment', 'push'],
   payloadUrl: process.env.PAYLOAD_URL,
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID,
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+  twilioFromNumber: process.env.TWILIO_FROM_NUMBER,
 };
