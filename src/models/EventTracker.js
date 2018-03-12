@@ -32,16 +32,9 @@ async function removeByUsernameAndOrganization(username, organization) {
   return this.countTrackers(organization);
 }
 
-async function removeByUsername(username) {
-  const trackers = await this.find({ username });
-  await this.remove({ username });
-  return trackers.filter(tracker => this.countTrackers(tracker.organization) === 0);
-}
-
 eventTrackerSchema.statics.getByUsernameAndOrganization = getByUsernameAndOrganization;
 eventTrackerSchema.statics.getTrackers = getTrackers;
 eventTrackerSchema.statics.countTrackers = countTrackers;
 eventTrackerSchema.statics.removeByUsernameAndOrganization = removeByUsernameAndOrganization;
-eventTrackerSchema.statics.removeByUsername = removeByUsername;
 const EventTracker = mongoose.model('EventTracker', eventTrackerSchema);
 export default EventTracker;
