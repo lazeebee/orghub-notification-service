@@ -8,8 +8,8 @@ export default function (config) {
 
   // API routes
   api.use('/notifications', notifications(config));
-  api.use('/notifications/payload', payload(config));
-  api.use('/notifications/unregister', unregister(config));
+  api.use('/payload', payload(config));
+  api.use('/unregister', unregister(config));
 
   // Expose something at root
   api.get('/', (req, res) => res.json({ message: 'Yay, Notification service is up and running' }));

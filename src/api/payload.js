@@ -7,11 +7,11 @@ export default function (config) {
 
   router.post('/', async (req, res, next) => {
     try {
-      const { zen, org } = req.body;
+      const { zen, organization } = req.body;
       const type = req.get('X-GitHub-Event');
 
       if (!zen) {
-        const trackers = await EventTracker.getTrackers(org.id, type);
+        const trackers = await EventTracker.getTrackers(organization.login, type);
         await processPayload(req.body, type, trackers, config);
       }
       res.sendStatus(202);

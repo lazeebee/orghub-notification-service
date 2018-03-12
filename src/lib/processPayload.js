@@ -1,9 +1,9 @@
 import Twilio from 'twilio';
 import Expo from 'expo-server-sdk';
-import { twilioAccountSid, twilioAuthToken, twilioFromNumber as from } from '../config';
+import config from '../config';
 
 const expo = new Expo();
-const twilio = Twilio(twilioAccountSid, twilioAuthToken);
+const twilio = Twilio(config.twilioAccountSid, config.twilioAuthToken);
 
 export function buildActionMessage(type, action) {
   if (type === 'issue_comment') {
@@ -41,6 +41,7 @@ export async function sendPush(subscribers, body, sound = 'default') {
 }
 
 export async function sendSms(subscribers, body) {
+  const from = config.twilioFromNumber;
   await subscribers.forEach(to => twilio.messages.create({ body, to, from }));
 }
 

@@ -6,15 +6,19 @@ import getUsernameByToken from '../lib/getUsernameByToken';
 export default function (config) {
   const router = Router();
 
-  router.get('/:organization', async (req, res) => {
-    const token = req.get('Authorization');
-    const { organization } = req.params;
-    const username = await getUsernameByToken(token);
-    const tracker = await EventTracker.getByUsernameAndOrganization(username, organization);
-    if (tracker) {
-      res.json(tracker);
-    } else {
-      res.sendStatus(404);
+  router.get('/:organization', async (req, res, next) => {
+    try {
+      const token = req.get('Authorization');
+      const { organization } = req.params;
+      const username = await getUsernameByToken(token);
+      const tracker = await EventTracker.getByUsernameAndOrganization(username, organization);
+      if (tracker) {
+        res.json(tracker);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err.response);
     }
   });
 
@@ -22,16 +26,13 @@ export default function (config) {
     try {
       const token = req.get('Authorization');
       const { organization } = req.params;
+      await createHook(organization, token, config);
       const username = await getUsernameByToken(token);
-      const count = await EventTracker.countTrackers(organization);
       const tracker = new EventTracker({ username, organization });
       await tracker.save();
-      if (!count) {
-        await createHook(organization, token, config);
-      }
       res.sendStatus(201);
     } catch (err) {
-      next(err);
+      next(err.response);
     }
   });
 
@@ -44,7 +45,7 @@ export default function (config) {
       await EventTracker.update({ username, organization }, { pushToken, phoneNumber, events });
       res.sendStatus(204);
     } catch (err) {
-      next(err);
+      next(err.response);
     }
   });
 
@@ -59,7 +60,7 @@ export default function (config) {
       }
       res.sendStatus(204);
     } catch (err) {
-      next(err);
+      next(err.response);
     }
   });
 

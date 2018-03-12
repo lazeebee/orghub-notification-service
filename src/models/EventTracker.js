@@ -1,23 +1,25 @@
 import mongoose from 'mongoose';
-import { eventTypes } from '../config';
+import config from '../config';
 
 const eventTrackerSchema = new mongoose.Schema({
   username: { type: String, required: true },
   organization: { type: String, required: true },
   pushToken: String,
   phoneNumber: String,
-  events: [{
-    type: String,
-    enum: eventTypes,
-    default: eventTypes,
-  }],
+  events: {
+    type: [{
+      type: String,
+      enum: config.eventTypes,
+    }],
+    default: config.eventTypes,
+  },
 });
 
 async function getByUsernameAndOrganization(username, organization) {
   return this.findOne({ username, organization });
 }
 
-async function getTrackers({ organization, events }) {
+async function getTrackers(organization, events) {
   return this.find({ organization, events });
 }
 
@@ -26,13 +28,13 @@ async function countTrackers(organization) {
 }
 
 async function removeByUsernameAndOrganization(username, organization) {
-  this.remove({ username, organization });
+  await this.remove({ username, organization });
   return this.countTrackers(organization);
 }
 
 async function removeByUsername(username) {
-  const trackers = this.find({ username });
-  this.remove({ username });
+  const trackers = await this.find({ username });
+  await this.remove({ username });
   return trackers.filter(tracker => this.countTrackers(tracker.organization) === 0);
 }
 
