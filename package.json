@@ -68,5 +68,12 @@
   "bugs": {
     "url": "https://github.com/ollelauribostrom/orghub-notification-service/issues"
   },
-  "homepage": "https://github.com/ollelauribostrom/orghub-notification-service#readme"
+  "homepage": "https://github.com/ollelauribostrom/orghub-notification-service#readme",
+  "now": {
+    "name": "orghub-notification-service",
+    "alias": "orghub-notification-service.now.sh",
+    "dotenv": true,
+    "public": true,
+    "type": "docker"
+  }
 }
