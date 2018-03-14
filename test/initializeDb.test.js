@@ -2,7 +2,7 @@ import chai, { expect } from 'chai';
 import sinon from 'sinon';
 import { initializeDb } from '../src/lib';
 
-describe('{unit}: initializeDb', () => {
+describe('{unit}: initializeDb.js', () => {
   const cb = sinon.stub();
   const config = {};
   initializeDb(config, cb);
