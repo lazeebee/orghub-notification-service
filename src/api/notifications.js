@@ -41,8 +41,8 @@ export default function (config) {
       const token = req.get('Authorization');
       const username = await getUsernameByToken(token);
       const { organization } = req.params;
-      const { pushToken, phoneNumber, events } = req.body;
-      await EventTracker.update({ username, organization }, { pushToken, phoneNumber, events });
+      const { pushToken, phoneNumber } = req.body;
+      await EventTracker.update({ username, organization }, { pushToken, phoneNumber });
       res.sendStatus(204);
     } catch (err) {
       next(err.response);
