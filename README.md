@@ -5,10 +5,10 @@ Notification service for OrgHub app
 
 Endpoints
 ---------
-| Endpoint              | Method    | Service   |
-|:--------------------- |:----------|:----------|
-| /notifications/:org   | GET, PUT, POST, DELETE   | Notifications      |
-| /payload              | POST      | Notifications      |
+| Endpoint              | Method    |
+|:--------------------- |:----------|
+| /notifications/:org   | GET, PUT, POST, DELETE   |
+| /payload              | POST      |
 
 
 
