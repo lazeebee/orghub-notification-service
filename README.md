@@ -1,5 +1,15 @@
 # orghub/notification-service
-_todo_
+Notification service for OrgHub app
+
+> Deployed @ https://orghub-notification-service.now.sh/api/v1
+
+Endpoints
+---------
+| Endpoint              | Method    | Service   |
+|:--------------------- |:----------|:----------|
+| /notifications/:org   | GET, PUT, POST, DELETE   | Notifications      |
+| /payload              | POST      | Notifications      |
+
 
 
 Commands
@@ -24,7 +34,7 @@ Publish to now
 --------------
 ```sh
 npm install now -g
-now --docker --public
+now && now alias
 # wait a bit..
 # visit url
 ```
